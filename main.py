@@ -20,6 +20,10 @@ enemy_speed = 4
 seconds_passed = 0
 ticks = 0
 
+is_jumping = False
+still_jumping  = True
+gravity = 10
+
 display_surface = pygame.display.set_mode((width, height))
 
 forest_Background = pygame.image.load("/home/shane/Resources/Pictures/Backgrounds/forest_long.png").convert()
@@ -56,10 +60,26 @@ while True:
     if collide: enemy_1_rect.x = enemy_pos_x
 
     keys = pygame.key.get_pressed()
-    if keys[pygame.K_a]:
+    if keys[pygame.K_LEFT]:
         player_rect.x -= 4
-    if keys[pygame.K_d]:
+    if keys[pygame.K_RIGHT]:
         player_rect.x += 4
+
+    if not is_jumping:
+        events = pygame.event.get()
+        for event in events:
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_SPACE:
+                    is_jumping = True
+    else:
+        if player_rect.centery > 150 and still_jumping:
+            player_rect.centery -= gravity
+            if player_rect.centery == 150: still_jumping = False
+        elif player_rect.centery <= 150 or not still_jumping:
+            player_rect.centery += gravity
+            if player_rect.centery >= 350:
+                is_jumping = False
+                still_jumping = True
 
     enemy_1_rect.x -= enemy_speed
 
