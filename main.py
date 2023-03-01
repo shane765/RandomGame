@@ -51,7 +51,7 @@ score_text = font.render("Score:", False, "Black" )
 score_text_rect = score_text.get_rect()
 score_text_rect.center = (100,75)
 
-pygame.display.set_caption('RandomGame')
+pygame.display.set_caption('Das neue Soulslike')
 
 while True:
 
