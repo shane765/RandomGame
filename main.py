@@ -11,6 +11,8 @@ width = 1200
 is_moving_forward = False
 is_moving_back = False
 
+is_hit = False
+
 left_border = -100
 right_border = 1300
 
@@ -19,6 +21,7 @@ enemy_speed = 4
 
 seconds_passed = 0
 ticks = 0
+total_time = "0"
 
 is_jumping = False
 still_jumping  = True
@@ -39,6 +42,15 @@ enemy_1 = pygame.transform.scale(enemy_1, (30, 75))
 enemy_1_rect = enemy_1.get_rect()
 enemy_1_rect.center = (enemy_pos_x, 350)
 
+font = pygame.font.Font(None, 70)
+score = font.render(total_time, False, "Black" )
+score_rect = score.get_rect()
+score_rect.center = (600,75)
+
+score_text = font.render("Score:", False, "Black" )
+score_text_rect = score_text.get_rect()
+score_text_rect.center = (100,75)
+
 pygame.display.set_caption('RandomGame')
 
 while True:
@@ -57,7 +69,11 @@ while True:
     display_surface.blit(grass,(750,300))
     display_surface.blit(grass,(950,300))
 
-    if collide: enemy_1_rect.x = enemy_pos_x
+    score = font.render(total_time, False, "Black")
+    display_surface.blit(score, score_rect)
+    display_surface.blit(score_text, score_text_rect)
+
+    if collide: is_hit = True
 
     keys = pygame.key.get_pressed()
     if keys[pygame.K_LEFT]:
@@ -89,13 +105,18 @@ while True:
         if event.type == pygame.QUIT:
             pygame.quit()
             quit()
-    pygame.display.update()
+    if not is_hit: pygame.display.update()
 
     ticks += 1
 
     if ticks == 60:
         ticks %= 60
         seconds_passed += 1
+
+        temp = int(total_time)
+        temp += 1
+        total_time = str(temp)
+
     if seconds_passed == 10:
         seconds_passed = 0
         if enemy_speed < 20:
