@@ -1,29 +1,28 @@
 import pygame
 
 pygame.init()
-white = (255, 255, 255)
-# assigning values to height and width variable
+
 height = 400
-width = 400
-# creating the display surface object
-# of specific dimension..e(X, Y).
-display_surface = pygame.display.set_mode((height, width))
+width = 600
 
-# set the pygame window name
-pygame.display.set_caption('Image')
+display_surface = pygame.display.set_mode((width, height))
 
-# creating a surface object, image is drawn on it.
-image = pygame.image.load(r'C:\Users\DEVANSH SHARMA\Desktop\download.png')
+forest_Background = pygame.image.load("/home/shane/Resources/Pictures/Backgrounds/forestBackground.png").convert()
+grass1 = pygame.image.load("/home/shane/Resources/Pictures/Backgrounds/grass.png").convert_alpha()
+grass2 = pygame.image.load("/home/shane/Resources/Pictures/Backgrounds/grass.png").convert_alpha()
+grass3 = pygame.image.load("/home/shane/Resources/Pictures/Backgrounds/grass.png").convert_alpha()
 
-# infinite loop
+
+pygame.display.set_caption('RandomGame')
+
 while True:
-    display_surface.fill(white)
-    display_surface.blit(image, (0, 0))
+    display_surface.blit(forest_Background, (0, 0))
+    display_surface.blit(grass1,(350,300))
+    display_surface.blit(grass2,(150,300))
+    display_surface.blit(grass3,(-50,300))
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             pygame.quit()
-            # quit the program.
             quit()
-            # Draws the surface object to the screen.
         pygame.display.update()
