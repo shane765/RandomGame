@@ -63,8 +63,9 @@ while True:
 
     collide = pygame.Rect.colliderect(player_rect, enemy_1_rect)
     if collide: is_hit = True
-    collide = pygame.Rect.colliderect(player_rect, enemy_2_rect)
-    if collide: is_hit = True
+    if int(total_time) > 50:
+        collide = pygame.Rect.colliderect(player_rect, enemy_2_rect)
+        if collide: is_hit = True
 
     display_surface.blit(forest_Background, (0, 0))
 
@@ -110,8 +111,8 @@ while True:
 
     if enemy_1_rect.centerx <= left_border: enemy1_speed *= -1
     if enemy_1_rect.centerx >= right_border: enemy1_speed *= -1
-    if enemy_2_rect.centerx <= left_border: enemy1_speed *= -1
-    if enemy_2_rect.centerx >= right_border: enemy1_speed *= -1
+    if enemy_2_rect.centerx <= left_border: enemy2_speed *= -1
+    if enemy_2_rect.centerx >= right_border: enemy2_speed *= -1
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
