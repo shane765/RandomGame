@@ -12,6 +12,9 @@ is_moving_forward = False
 is_moving_back = False
 
 is_hit = False
+leben = 3
+hit_timer = 0
+death_timer = 1
 
 left_border = -0
 right_border = 1200
@@ -35,6 +38,7 @@ grass = pygame.image.load("/home/shane/Resources/Pictures/Backgrounds/grass.png"
 player = pygame.image.load("/home/shane/Resources/Pictures/Character/player_1.png").convert_alpha()
 enemy_1 = pygame.image.load("/home/shane/Resources/Pictures/Enemy/enemy_1.png").convert_alpha()
 enemy_2 = pygame.image.load("/home/shane/Resources/Pictures/Enemy/enemy_2.png").convert_alpha()
+herz = pygame.image.load("/home/shane/Resources/Pictures/Other/herz.png").convert_alpha()
 
 player = pygame.transform.scale(player, (40,80))
 player_rect = player.get_rect()
@@ -48,6 +52,8 @@ enemy_2 = pygame.transform.scale(enemy_2, (75, 75))
 enemy_2_rect = enemy_2.get_rect()
 enemy_2_rect.center = (enemy_pos_x, 350)
 
+herz = pygame.transform.scale(herz, (50,50))
+
 font = pygame.font.Font(None, 70)
 score = font.render(total_time, False, "Black" )
 score_rect = score.get_rect()
@@ -57,21 +63,33 @@ score_text = font.render("Score:", False, "Black" )
 score_text_rect = score_text.get_rect()
 score_text_rect.center = (100,75)
 
+death_text = font.render("You Died", False, "Red" )
+death_text_rect = death_text.get_rect()
+death_text_rect.center = (600,200)
+
 pygame.display.set_caption('Das neue Soulslike')
 
 while True:
 
     collide = pygame.Rect.colliderect(player_rect, enemy_1_rect)
-    if collide: is_hit = True
+    if collide and hit_timer <= 0:
+        leben -= 1
+        hit_timer = 30
     if int(total_time) > 50:
         collide = pygame.Rect.colliderect(player_rect, enemy_2_rect)
-        if collide: is_hit = True
+        if collide and hit_timer <= 0:
+            hit_timer = 30
+            leben -= 1
 
     display_surface.blit(forest_Background, (0, 0))
 
     display_surface.blit(player, player_rect)
     display_surface.blit(enemy_1, enemy_1_rect)
     if int(total_time) > 50: display_surface.blit(enemy_2, enemy_2_rect)
+
+    if leben >= 3: display_surface.blit(herz,(950,50))
+    if leben >= 2: display_surface.blit(herz, (1025, 50))
+    if leben >= 1: display_surface.blit(herz, (1100, 50))
 
     display_surface.blit(grass, (350,300))
     display_surface.blit(grass, (150,300))
@@ -81,14 +99,22 @@ while True:
     display_surface.blit(grass, (950,300))
 
     score = font.render(total_time, False, "Black")
+    death = font.render("You Died", False, "Red")
     display_surface.blit(score, score_rect)
     display_surface.blit(score_text, score_text_rect)
 
+    if death_timer == 0:
+        is_hit = True
+
+    if leben == 0:
+        display_surface.blit(death, death_text_rect)
+        death_timer -= 1
+
     keys = pygame.key.get_pressed()
     if keys[pygame.K_LEFT]:
-        player_rect.x -= 4
+        if player_rect.centerx > 0: player_rect.x -= 4
     if keys[pygame.K_RIGHT]:
-        player_rect.x += 4
+        if player_rect.centerx < 1200:player_rect.x += 4
 
     if not is_jumping:
         events = pygame.event.get()
@@ -120,8 +146,8 @@ while True:
             quit()
     if not is_hit : pygame.display.update()
 
-
     ticks += 1
+    hit_timer -= 1
 
     if ticks == 60:
         ticks %= 60
@@ -133,17 +159,16 @@ while True:
 
     if int(total_time) > 50:
         if seconds_passed == 10:
-            if enemy2_speed <= 20 and enemy2_speed > 0:
+            if 20 >= enemy2_speed > 0:
                 enemy2_speed += 1
-            elif enemy2_speed >= -20 and enemy2_speed < 0:
+            elif -20 <= enemy2_speed < 0:
                 enemy2_speed -= 1
 
     if seconds_passed == 10:
         seconds_passed = 0
-        if enemy1_speed <= 20 and enemy1_speed > 0:
+        if 20 >= enemy1_speed > 0:
             enemy1_speed += 1
-        elif enemy1_speed >= -20 and enemy1_speed < 0:
+        elif -20 <= enemy1_speed < 0:
             enemy1_speed -= 1
-
 
     fpsClock.tick(FPS)
